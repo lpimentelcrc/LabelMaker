@@ -1,0 +1,167 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f9;
+}
+
+/* --- Preview Styles (On-Screen) - Represents 8.5x11 Sheet View --- */
+#label-preview {
+    width: 100%;
+    height: auto; /* Content drives height */
+    overflow-y: visible; /* Only scroll if content is too large */
+    background-color: white;
+    border: 1px solid #e5e7eb; /* Visual paper border */
+    padding: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem; /* Add spacing at the bottom */
+}
+
+/* Styles for content inside the preview/print */
+.sticker-box {
+    border: 2px dashed #6b7280;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
+    min-width: 6rem;
+}
+.oz-line, .date-line {
+    display: inline-block;
+    border-bottom: 1px solid #111827;
+}
+.oz-line { width: 40px; }
+.date-line { width: 50px; }
+.label-line { border-bottom: 1px solid #111827; margin-bottom: 1rem; }
+
+/* ------------------ COMMON LABEL STYLES (Applies to both preview and print) ------------------ */
+.meal-label-box {
+    border: 2px solid #111827;
+    padding: 0.75rem;
+    margin: 0 !important; /* Override Tailwind margins */
+}
+.nutrition-image-container {
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    box-shadow: none;
+    /* Ensures slots have a minimum height for visibility */
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+}
+.nutrition-image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Styling for empty slots (only visible on screen) */
+.nutrition-slot-empty {
+    border-style: dashed !important;
+    border-color: #d1d5db !important; /* gray-300 */
+    background-color: #f9fafb !important; /* gray-50 */
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- On-Screen Layout Rules (Mimic Print Layouts for Preview) --- */
+
+/* LAYOUT: STACKED (1-5 Labels) - Now the only layout */
+.print-stacked-layout {
+    width: 100%;
+}
+.print-stacked-layout .meal-label-box {
+    margin-bottom: 1.5rem;
+    /* Add visual elevation to the label itself */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.print-stacked-layout #nutrition-images-grid {
+    display: grid;
+    gap: 1rem;
+}
+/* Fixed 5-column grid for preview (screen) */
+.grid-cols-5-print { grid-template-columns: repeat(5, 1fr); }
+
+
+/* === PRINT STYLES FOR 8.5 x 11 OPTIMIZATION (1/8'' border) === */
+@media print {
+    /* Set page size and margins for 8.5x11 (standard letter) with 1/8" border */
+    @page {
+        size: letter portrait; /* 8.5in x 11in */
+        margin: 0.125in; /* 1/8" border on all sides */
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        /* Printable area is 8.5 - 0.25 = 8.25 inches */
+        width: 8.25in;
+    }
+
+    /* Hide the input form, header, and print button */
+    .md\:grid-cols-2 > :first-child, h1, #label-preview-header {
+        display: none !important;
+    }
+    
+    /* Ensure the preview area uses the full printable space */
+    .max-w-7xl.mx-auto, .md\:grid-cols-2 {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Reset the preview container for print */
+    #label-preview {
+        all: unset;
+        display: block;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        /* Ensure only one page is printed */
+        height: 10.75in; /* Max printable height */
+        overflow: hidden;
+    }
+    
+    /* --- LAYOUT: STACKED (Fixed 5 Labels) - Now the only layout --- */
+    .print-stacked-layout {
+        width: 100%;
+        display: block;
+    }
+    .print-stacked-layout .meal-label-box {
+        width: 100% !important;
+        margin-bottom: 0.5in; /* Use print units */
+        box-shadow: none !important;
+    }
+    .print-stacked-layout #nutrition-labels-section {
+        padding: 0 !important;
+        width: 100%;
+        page-break-before: avoid;
+    }
+    
+    .print-stacked-layout #nutrition-images-grid {
+        display: grid;
+        gap: 0.5rem;
+        /* MODIFICATION: Force fixed 5-column grid in print */
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+    
+    /* MODIFICATION: Do NOT hide empty slots during printing. 
+       Instead, show them, but with no content/border to act as spacers. */
+    .nutrition-slot-empty {
+        /* Make the empty slot truly invisible (no border, no content) but occupy space */
+        border: none !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+    .nutrition-slot-empty span {
+        /* Hide the "Slot Empty" text in print */
+        display: none !important;
+    }
+
+    /* Ensure image containers use the full space within the new dynamic grid */
+    .nutrition-image-container {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+}
