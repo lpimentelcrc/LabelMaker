@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRC Smart Meal Label Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-6">Meal Label Generator</h1>
+        
+        <div class="grid md:grid-cols-2 gap-10">
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg h-fit">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">Label Data Input </h2>
+
+                <form id="labelForm">
+                    <div class="mb-4">
+                        <label for="productName" class="block text-sm font-medium text-gray-700">Product Name (Top Header)</label>
+                        <input type="text" id="productName" value="Ready Meal" maxlength="250" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="mealName" class="block text-sm font-medium text-gray-700">Meal Name</label>
+                        <input type="text" id="mealName" value="Chicken & Vegetable Stir Fry" maxlength="250" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ingredients List</label>
+                        <p class="text-xs text-gray-500 mb-3">Add ingredient name and optional nutrition label image for printing. Only the first 5 ingredients will have a corresponding nutrition label slot.</p>
+                        <div id="ingredientsContainer" class="space-y-3">
+                            </div>
+                        
+                        <button type="button" id="addIngredientBtn" onclick="addIngredient()" class="mt-3 w-full bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition duration-150 shadow-md">
+                            + Add Ingredient
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="block text-sm font-medium text-gray-700 mb-2">Dietary Info</span>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="dietaryInfo" value="Vegan" class="form-radio text-indigo-600" onchange="updateLabel()">
+                                <span class="ml-2 text-gray-700">Vegan</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="dietaryInfo" value="Gluten Free" class="form-radio text-indigo-600" checked onchange="updateLabel()">
+                                <span class="ml-2 text-gray-700">Gluten Free</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="dietaryInfo" value="Vegetarian" class="form-radio text-indigo-600" onchange="updateLabel()">
+                                <span class="ml-2 text-gray-700">Vegetarian</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="dietaryInfo" value="" class="form-radio text-indigo-600" onchange="updateLabel()">
+                                <span class="ml-2 text-gray-700">None</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="handlingInstructions" class="block text-sm font-medium text-gray-700">Handling Instructions</label>
+                        <textarea id="handlingInstructions" rows="2" maxlength="250" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" required>Keep refrigerated. Reheat to 165°F before consumption.</textarea>
+                    </div>
+                    
+                    <button type="button" onclick="window.print()" class="mt-6 w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition duration-150 shadow-lg">
+                        🖨️ Print Label Sheet
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="md:sticky md:top-8 h-fit">
+                <h2 id="label-preview-header" class="text-xl font-bold mb-4 border-b pb-2">Label Preview (8.5" x 11" Format)</h2>
+                <div id="label-preview">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
